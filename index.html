@@ -566,6 +566,7 @@
       </div>
       <img id="lightboxImage" src="" class="lightbox-img" alt="معاينة الصورة">
       <div class="modal-actions">  
+        <button class="btn btn-accent" onclick="copyImageDirectLink()"><i class="fa-solid fa-link"></i> نسخ رابط الصورة المباشر</button>
         <button class="btn btn-secondary" onclick="closeModal('lightboxModal')">إغلاق</button>  
       </div>  
     </div>  
@@ -625,7 +626,7 @@
       <h3>هل تريد حذف المشروع؟</h3>  
       <p style="color: #888; margin-top: 10px; font-size: 14px;">سيتم حذفه نهائياً وبالكامل ولا يصبح له أي أثر.</p>  
       <div class="modal-actions">  
-        <button class="btn btn-danger" onclick="confirmDeleteProject 
+        <button class="btn btn-danger" onclick="confirmDeleteProject()">نعم، احذف</button>  
         <button class="btn btn-secondary" onclick="closeModal('deleteModal')">إلغاء</button>  
       </div>  
     </div>  
@@ -639,6 +640,7 @@
     let projects = JSON.parse(localStorage.getItem('lumiqon_projects') || '[]');  
     let projectToDeleteIndex = null;  
     let isCurrentProjectSaved = false;  
+    let currentActiveImageIndex = null;
 
     // تشغيل الفيديو الفوري وإجبار الكتم الصوتي  
     window.addEventListener('DOMContentLoaded', function() {  
@@ -712,6 +714,14 @@
 
     function closeModal(modalId) {  
       document.getElementById(modalId).style.display = 'none';  
+      if (modalId === 'lightboxModal') {
+        currentActiveImageIndex = null;
+        // إزالة معرّف الصورة من الرابط عند إغلاق العارض
+        if (window.location.hash.includes('img=')) {
+          const newHash = window.location.hash.replace(/&?img=\d+/, '');
+          history.pushState(null, null, newHash || window.location.pathname);
+        }
+      }
     }  
 
     function handleFileUpload(event) {  
@@ -751,9 +761,9 @@
         const card = document.createElement('div');  
         card.className = 'image-card';  
         card.innerHTML = `  
-          <img src="${imgSrc}" onclick="openLightbox('${imgSrc}')">  
+          <img src="${imgSrc}" onclick="openLightbox('${imgSrc}', ${index})">  
           <div class="card-overlay">  
-            <button class="overlay-btn btn-view" title="عرض الحجم الكامل" onclick="openLightbox('${imgSrc}')"><i class="fa-solid fa-expand"></i></button>  
+            <button class="overlay-btn btn-view" title="عرض الحجم الكامل" onclick="openLightbox('${imgSrc}', ${index})"><i class="fa-solid fa-expand"></i></button>  
             <button class="overlay-btn btn-delete" title="حذف الصورة" onclick="removeImage(${index})"><i class="fa-solid fa-trash-can"></i></button>  
           </div>  
         `;  
@@ -763,9 +773,34 @@
       document.getElementById('shareSection').style.display = currentImages.length > 0 ? 'flex' : 'none';  
     }  
 
-    function openLightbox(imgSrc) {
+    function openLightbox(imgSrc, index = null) {
       document.getElementById('lightboxImage').src = imgSrc;
+      currentActiveImageIndex = index;
+      
+      if (index !== null) {
+        let currentHash = window.location.hash;
+        if (currentHash.includes('img=')) {
+          currentHash = currentHash.replace(/img=\d+/, `img=${index + 1}`);
+        } else if (currentHash.length > 0) {
+          currentHash += `&img=${index + 1}`;
+        } else {
+          currentHash = `#img=${index + 1}`;
+        }
+        history.pushState(null, null, currentHash);
+      }
+
       openModal('lightboxModal');
+    }
+
+    function copyImageDirectLink() {
+      if (currentActiveImageIndex === null) return;
+      
+      const shareableUrl = window.location.href;
+      navigator.clipboard.writeText(shareableUrl).then(() => {
+        showToast("تم نسخ رابط الصورة الفريد والمباشر بنجاح!");
+      }).catch(() => {
+        showToast("تعذر الوصول للحافظة.", "fa-triangle-exclamation");
+      });
     }
 
     function removeImage(index) {  
@@ -876,7 +911,6 @@
       if (currentImages.length === 0) return;
 
       try {
-        // تشفير صور المعرض لداخل الـ Hash لرابط متكامل يمكن مشاركته
         const jsonStr = JSON.stringify(currentImages);
         const encodedData = encodeURIComponent(jsonStr);
         const shareableUrl = window.location.origin + window.location.pathname + '#gallery=' + encodedData;
@@ -893,21 +927,36 @@
 
     function checkSharedProjectLink() {
       const hash = window.location.hash;
-      if (hash && hash.startsWith('#gallery=')) {
-        try {
-          const encodedData = hash.replace('#gallery=', '');
-          const decodedData = decodeURIComponent(encodedData);
-          const images = JSON.parse(decodedData);
-          if (Array.isArray(images) && images.length > 0) {
-            currentImages = images;
-            renderGallery();
-            showToast("تم تحميل المعرض المشارك بنجاح!");
+      if (hash) {
+        let imgTargetIndex = null;
+        const imgMatch = hash.match(/img=(\d+)/);
+        if (imgMatch) {
+          imgTargetIndex = parseInt(imgMatch[1], 10) - 1;
+        }
+
+        if (hash.includes('gallery=')) {
+          try {
+            const encodedData = hash.split('gallery=')[1].split('&')[0];
+            const decodedData = decodeURIComponent(encodedData);
+            const images = JSON.parse(decodedData);
+            if (Array.isArray(images) && images.length > 0) {
+              currentImages = images;
+              renderGallery();
+              showToast("تم تحميل المعرض المشارك بنجاح!");
+            }
+          } catch (e) {
+            console.error("خطأ في قراءة رابط المشاركة:", e);
           }
-        } catch (e) {
-          console.error("خطأ في قراءة رابط المشاركة:", e);
+        }
+
+        // إذا تم تحديد صورة عبر الرابط المباشر
+        if (imgTargetIndex !== null && currentImages[imgTargetIndex]) {
+          setTimeout(() => {
+            openLightbox(currentImages[imgTargetIndex], imgTargetIndex);
+          }, 300);
         }
       }
     }
   </script>  
 </body>  
-</html>  
+</html>
