@@ -634,8 +634,13 @@
 
   <div class="toast-container" id="toastContainer"></div>    
 
+ <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>  
-    const MAX_SIZE = 5 * 1024 * 1024;  
+  const SUPABASE_URL = "https://slzywqeixxhbufkatank.supabase.co";
+const SUPABASE_ANON_KEY = sb_publishable_drHvRyPCMffgfBQW6bNYuQ_EyPuQ2Fq;
+const IMGBB_API_KEY = 366d17997c2f2fc4221f967da17d0717;
+
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);  const MAX_SIZE = 5 * 1024 * 1024;  
     let currentImages = [];  
     let projects = JSON.parse(localStorage.getItem('lumiqon_projects') || '[]');  
     let projectToDeleteIndex = null;  
@@ -728,30 +733,7 @@
       handleFiles(event.target.files);
     }  
 
-    function handleFiles(files) {
-      if (!files || files.length === 0) return;
-
-      Array.from(files).forEach(file => {
-        if (!file.type.match('image.*')) {
-          showToast("يرجى اختيار صور فقط.", "fa-triangle-exclamation");
-          return;
-        }
-
-        if (file.size > MAX_SIZE) {  
-          showToast(`الصورة ${file.name} تتجاوز 5 ميجابايت.`, "fa-triangle-exclamation");  
-          return;  
-        }  
-
-        const reader = new FileReader();  
-        reader.onload = function(e) {  
-          currentImages.push(e.target.result);  
-          isCurrentProjectSaved = false;  
-          resetSaveButton();  
-          renderGallery();  
-        };  
-        reader.readAsDataURL(file);  
-      });
-    }
+    
 
     function renderGallery() {  
       const grid = document.getElementById('galleryGrid');  
@@ -772,12 +754,64 @@
 
       document.getElementById('shareSection').style.display = currentImages.length > 0 ? 'flex' : 'none';  
     }  
+async function uploadImageToImgBB(file) {
+  const formData = new FormData();
+  formData.append('image', file);
 
+  const response = await fetch(
+    `https://api.imgbb.com/1/upload?key=${encodeURIComponent(IMGBB_API_KEY)}`,
+    {
+      method: 'POST',
+      body: formData
+    }
+  );
+
+  const result = await response.json();
+
+  if (!response.ok || !result.success) {
+    throw new Error(result?.error?.message || 'فشل رفع الصورة');
+  }
+
+  return result.data.url;
+}
+
+async function handleFiles(files) {
+  if (!files || files.length === 0) return;
+
+  for (const file of Array.from(files)) {
+    if (!file.type.match('image.*')) {
+      showToast("يرجى اختيار صور فقط.", "fa-triangle-exclamation");
+      continue;
+    }
+
+    if (file.size > MAX_SIZE) {
+      showToast(`الصورة ${file.name} تتجاوز 5 ميجابايت.`, "fa-triangle-exclamation");
+      continue;
+    }
+
+    try {
+      showToast(`جاري رفع ${file.name}...`, "fa-circle-notch");
+
+      const imageUrl = await uploadImageToImgBB(file);
+
+      currentImages.push(imageUrl);
+      isCurrentProjectSaved = false;
+      resetSaveButton();
+      renderGallery();
+
+      showToast(`تم رفع ${file.name} بنجاح!`);
+    } catch (error) {
+      console.error(error);
+      showToast(`تعذر رفع الصورة ${file.name}.`, "fa-triangle-exclamation");
+    }
+  }
+}
     function openLightbox(imgSrc, index = null) {
       document.getElementById('lightboxImage').src = imgSrc;
       currentActiveImageIndex = index;
       
       if (index !== null) {
+          
         let currentHash = window.location.hash;
         if (currentHash.includes('img=')) {
           currentHash = currentHash.replace(/img=\d+/, `img=${index + 1}`);
@@ -793,14 +827,15 @@
     }
 
     function copyImageDirectLink() {
-      if (currentActiveImageIndex === null) return;
-      
-      const shareableUrl = window.location.href;
-      navigator.clipboard.writeText(shareableUrl).then(() => {
-        showToast("تم نسخ رابط الصورة الفريد والمباشر بنجاح!");
-      }).catch(() => {
-        showToast("تعذر الوصول للحافظة.", "fa-triangle-exclamation");
-      });
+  if (currentActiveImageIndex === null) return;
+
+  const imageUrl = currentImages[currentActiveImageIndex];
+
+  navigator.clipboard.writeText(imageUrl).then(() => {
+    showToast("تم نسخ رابط الصورة المباشر بنجاح!");
+  }).catch(() => {
+    showToast("تعذر الوصول للحافظة.", "fa-triangle-exclamation");
+  });
     }
 
     function removeImage(index) {  
@@ -907,56 +942,66 @@
       }  
     }  
 
-    function copyProjectLink() {  
-      if (currentImages.length === 0) return;
+    async function copyProjectLink() {
+  if (currentImages.length === 0) return;
 
-      try {
-        const jsonStr = JSON.stringify(currentImages);
-        const encodedData = encodeURIComponent(jsonStr);
-        const shareableUrl = window.location.origin + window.location.pathname + '#gallery=' + encodedData;
+  try {
+    showToast("جاري إنشاء رابط المشاركة...", "fa-circle-notch");
 
-        navigator.clipboard.writeText(shareableUrl).then(() => {
-          showToast("تم نسخ رابط المعرض والمشروع المباشر بنجاح!");  
-        }).catch(() => {
-          showToast("تم تجهيز الرابط ولكن تعذر الوصول للحافظة.", "fa-triangle-exclamation");
-        });
-      } catch (err) {
-        showToast("حجم المعرض كبير جداً للرابط المباشر، يفضل حفظه كمشروع.", "fa-triangle-exclamation");
-      }
-    }  
+    const galleryId = crypto.randomUUID();
 
-    function checkSharedProjectLink() {
-      const hash = window.location.hash;
-      if (hash) {
-        let imgTargetIndex = null;
-        const imgMatch = hash.match(/img=(\d+)/);
-        if (imgMatch) {
-          imgTargetIndex = parseInt(imgMatch[1], 10) - 1;
-        }
+    const { error } = await supabaseClient
+      .from('galleries')
+      .insert({
+        id: galleryId,
+        images: currentImages
+      });
 
-        if (hash.includes('gallery=')) {
-          try {
-            const encodedData = hash.split('gallery=')[1].split('&')[0];
-            const decodedData = decodeURIComponent(encodedData);
-            const images = JSON.parse(decodedData);
-            if (Array.isArray(images) && images.length > 0) {
-              currentImages = images;
-              renderGallery();
-              showToast("تم تحميل المعرض المشارك بنجاح!");
-            }
-          } catch (e) {
-            console.error("خطأ في قراءة رابط المشاركة:", e);
-          }
-        }
+    if (error) throw error;
 
-        // إذا تم تحديد صورة عبر الرابط المباشر
-        if (imgTargetIndex !== null && currentImages[imgTargetIndex]) {
-          setTimeout(() => {
-            openLightbox(currentImages[imgTargetIndex], imgTargetIndex);
-          }, 300);
-        }
-      }
+    const shareableUrl =
+      `${window.location.origin}${window.location.pathname}?gallery=${galleryId}`;
+
+    await navigator.clipboard.writeText(shareableUrl);
+
+    showToast("تم إنشاء رابط المعرض ونسخه بنجاح!");
+  } catch (error) {
+    console.error("خطأ في إنشاء رابط المشاركة:", error);
+    showToast("تعذر إنشاء رابط المشاركة.", "fa-triangle-exclamation");
+  }
     }
+
+    async function checkSharedProjectLink() {
+  const params = new URLSearchParams(window.location.search);
+  const galleryId = params.get('gallery');
+
+  if (!galleryId) return;
+
+  try {
+    const { data, error } = await supabaseClient
+      .from('galleries')
+      .select('images')
+      .eq('id', galleryId)
+      .maybeSingle();
+
+    if (error) throw error;
+
+    if (!data) {
+      showToast("المعرض غير موجود.", "fa-triangle-exclamation");
+      return;
+    }
+
+    if (Array.isArray(data.images)) {
+      currentImages = data.images;
+      renderGallery();
+      showToast("تم تحميل المعرض المشارك بنجاح!");
+    }
+  } catch (error) {
+    console.error("خطأ في تحميل المعرض:", error);
+    showToast("تعذر تحميل المعرض.", "fa-triangle-exclamation");
+  }
+    }
+    
   </script>  
 </body>  
 </html>
