@@ -1,890 +1,250 @@
-<!DOCTYPE html>  
-<html lang="ar" dir="rtl">  
-<head>  
-  <meta charset="UTF-8">  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">  
-  <meta name="description" content="Lumiqon - معرض فاخر لعرض أعمالك وصورك المميزة ومشاركتها عبر رابط مباشر.">  
-  <meta property="og:title" content="Lumiqon | معرض الأعمال الفاخر">  
-  <meta property="og:description" content="اعرض إبداعك بأسلوب راقٍ">    
-  <title>Lumiqon | معرض الأعمال الفاخر</title>  
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">  
-  <style>  
-    :root {  
-      --bg-main: #0a0a0c;  
-      --bg-card: rgba(20, 20, 25, 0.85);  
-      --accent: #d4af37;  
-      --accent-glow: rgba(212, 175, 55, 0.3);  
-      --text-main: #f0f0f0;  
-      --danger: #ff4d4d;  
-      --success: #2e7d32;  
-    }  
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>استوديو الفن البصري - تحويل وضغط الصور الآمن</title>
+    <!-- استدعاء إطار Tailwind CSS للتصميم السريع والجميل -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Tajawal', sans-serif; }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-indigo-950 via-purple-900 to-slate-900 min-h-screen text-slate-100 flex flex-col justify-between p-4 md:p-8">
 
-    * {  
-      box-sizing: border-box;  
-      margin: 0;  
-      padding: 0;  
-      font-family: system-ui, -apple-system, sans-serif;  
-    }  
+    <!-- رأس الصفحة -->
+    <header class="text-center max-w-2xl mx-auto mb-8">
+        <span class="bg-gradient-to-r from-pink-500 to-violet-500 text-xs text-white uppercase tracking-widest px-3 py-1 rounded-full font-semibold shadow-md">معرض الإبداع الرقمي الآمن</span>
+        <h1 class="text-4xl md:text-5xl font-black mt-3 bg-gradient-to-r from-white via-pink-200 to-indigo-200 bg-clip-text text-transparent">استوديو تحويل وضغط الصور</h1>
+        <p class="text-slate-300 mt-2 text-sm md:text-base">أطلق العنان لصورك: غيّر صيغها، قلل أحجامها، مع نظام حماية صارم وآمن تماماً.</p>
+    </header>
 
-    body {  
-      background-color: var(--bg-main);  
-      color: var(--text-main);  
-      min-height: 100vh;  
-      display: flex;  
-      flex-direction: column;  
-      position: relative;  
-      overflow-x: hidden;  
-    }  
+    <!-- المحتوى الرئيسي -->
+    <main class="max-w-4xl mx-auto w-full grid grid-cols-1 md:grid-cols-2 gap-6">
+        
+        <!-- قسم الرفع والاختيارات -->
+        <div class="glass-card text-slate-800 p-6 rounded-2xl shadow-2xl flex flex-col justify-between">
+            <div>
+                <h2 class="text-xl font-bold mb-4 text-indigo-950 flex items-center gap-2">
+                    <svg class="w-6 h-6 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    لوحة التحكم والإعدادات
+                </h2>
 
-    /* حاوية فيديو الخلفية الثابتة */  
-    .video-background-container {  
-      position: fixed;  
-      top: 0;  
-      left: 0;  
-      width: 100vw;  
-      height: 100vh;  
-      background-color: #000;  
-      overflow: hidden;  
-      z-index: -1;  
-    }  
+                <!-- رفع الصورة مع حماية صارمة -->
+                <div class="mb-5">
+                    <label class="block text-sm font-semibold mb-2 text-slate-700">اختر لوحتك الفنية (صور فقط):</label>
+                    <input type="file" id="uploadImage" accept="image/jpeg, image/png, image/webp, image/gif, image/bmp" class="w-full text-sm text-slate-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-pink-50 file:text-pink-700 hover:file:bg-pink-100 cursor-pointer border border-slate-200 rounded-xl p-1 bg-white">
+                    <p class="text-[11px] text-slate-500 mt-1">ملاحظة أمنية: يتم قبول الملفات الصور الخالصة فقط (JPG, PNG, WEBP).</p>
+                </div>
 
-    .bg-video {  
-      position: absolute;  
-      top: 50%;  
-      left: 50%;  
-      transform: translate(-50%, -50%);  
-      min-width: 100%;  
-      min-height: 100%;  
-      width: auto;  
-      height: auto;  
-      object-fit: cover;  
-      pointer-events: none;  
-      filter: brightness(0.4) contrast(1.1);  
-    }  
+                <!-- اختيار الصيغة -->
+                <div class="mb-5">
+                    <label class="block text-sm font-semibold mb-2 text-slate-700">الصيغة المستهدفة:</label>
+                    <select id="outputFormat" class="w-full p-3 rounded-xl border border-slate-200 bg-white text-slate-800 focus:outline-none focus:ring-2 focus:ring-pink-500 font-medium">
+                        <option value="image/webp">WEBP (الأفضل للفن وضغط الحجم)</option>
+                        <option value="image/jpeg">JPG (صيغة كلاسيكية قياسية)</option>
+                        <option value="image/png">PNG (دقة شفافة عالية)</option>
+                    </select>
+                </div>
 
-    .bg-video::-webkit-media-controls {  
-      display: none !important;  
-    }  
+                <!-- شريط الجودة -->
+                <div class="mb-6">
+                    <div class="flex justify-between text-sm font-semibold mb-2 text-slate-700">
+                        <span>مستوى الجودة وضغط الحجم:</span>
+                        <span id="qualityVal" class="text-pink-600 font-bold">75%</span>
+                    </div>
+                    <input type="range" id="imageQuality" min="0.1" max="1.0" step="0.05" value="0.75" class="w-full accent-pink-600 cursor-pointer">
+                </div>
+            </div>
 
-    .video-overlay {  
-      position: absolute;  
-      top: 0;  
-      left: 0;  
-      width: 100%;  
-      height: 100%;  
-      background: radial-gradient(circle, rgba(10,10,12,0.4) 0%, rgba(10,10,12,0.85) 100%);  
-      pointer-events: none;  
-    }  
+            <button onclick="processImage()" class="w-full py-3.5 bg-gradient-to-r from-pink-600 to-violet-600 hover:from-pink-700 hover:to-violet-700 text-white font-bold rounded-xl shadow-lg transition transform active:scale-95 flex items-center justify-center gap-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+                معالجة وتحميل التحفة الفنية
+            </button>
+        </div>
 
-    .site-content {  
-      position: relative;  
-      z-index: 1;  
-      width: 100%;  
-      min-height: 100vh;  
-      display: flex;  
-      flex-direction: column;  
-    }  
+        <!-- قسم المعاينة -->
+        <div class="glass-card text-slate-800 p-6 rounded-2xl shadow-2xl flex flex-col items-center justify-center text-center">
+            <h2 class="text-xl font-bold mb-4 text-indigo-950 w-full text-right">معاينة العمل</h2>
+            
+            <div id="previewContainer" class="w-full h-64 border-2 border-dashed border-slate-300 rounded-xl flex flex-col items-center justify-center relative overflow-hidden bg-slate-50/50">
+                <svg class="w-12 h-12 text-slate-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                <p class="text-sm text-slate-500">لم يتم اختيار صورة آمنة بعد</p>
+            </div>
 
-    header {  
-      display: flex;  
-      justify-content: space-between;  
-      align-items: center;  
-      padding: 15px 30px;  
-      background: rgba(15, 15, 20, 0.8);  
-      backdrop-filter: blur(12px);  
-      border-bottom: 1px solid rgba(212, 175, 55, 0.2);  
-      position: sticky;  
-      top: 0;  
-      z-index: 10;  
-    }  
+            <div id="stats" class="w-full mt-4 grid grid-cols-2 gap-2 text-xs font-semibold text-slate-600 hidden">
+                <div class="bg-white/80 p-2.5 rounded-lg border border-slate-200">الحجم الأصلي: <span id="originalSize" class="text-indigo-900 font-bold">0 KB</span></div>
+                <div class="bg-white/80 p-2.5 rounded-lg border border-slate-200">الحجم الجديد: <span id="newSize" class="text-pink-600 font-bold">0 KB</span></div>
+            </div>
+        </div>
 
-    .brand-title {  
-      font-weight: 700;  
-      font-size: 22px;  
-      color: var(--accent);  
-      letter-spacing: 1px;  
-      cursor: pointer;  
-    }  
+    </main>
 
-    .header-actions {  
-      display: flex;  
-      align-items: center;  
-      gap: 15px;  
-    }  
+    <!-- نافذة منبثقة مخصصة للتنبيهات الأمنية والفنية -->
+    <div id="customModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-indigo-950 border border-purple-500/30 text-white rounded-2xl max-w-sm w-full p-6 text-center shadow-2xl transform transition-all scale-95 opacity-0" id="modalContent">
+            <div id="modalIcon" class="w-16 h-16 bg-pink-600/20 text-pink-400 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">⚠</div>
+            <h3 id="modalTitle" class="text-lg font-bold mb-2">تنبيه أمني</h3>
+            <p id="modalMessage" class="text-slate-300 text-sm mb-6">الرسالة هنا</p>
+            <button onclick="closeModal()" class="w-full py-2.5 bg-gradient-to-r from-pink-600 to-violet-600 hover:from-pink-700 hover:to-violet-700 text-white font-bold rounded-xl shadow-lg transition">حسناً</button>
+        </div>
+    </div>
 
-    .add-btn {  
-      background: var(--accent);  
-      color: #000;  
-      border: none;  
-      padding: 8px 18px;  
-      border-radius: 8px;  
-      font-weight: bold;  
-      cursor: pointer;  
-      display: flex;  
-      align-items: center;  
-      gap: 8px;  
-      transition: 0.3s;  
-    }  
-
-    .add-btn:hover {  
-      background: #f3ce56;  
-      box-shadow: 0 0 15px var(--accent-glow);  
-    }  
-
-    .menu-btn {  
-      background: none;  
-      border: none;  
-      color: var(--accent);  
-      font-size: 24px;  
-      cursor: pointer;  
-    }  
-
-    .hero-section {  
-      text-align: center;  
-      padding: 40px 20px 20px;  
-      max-width: 800px;  
-      margin: 0 auto;  
-    }  
-
-    .hero-title {  
-      font-size: 2.6rem;  
-      font-weight: 700;  
-      background: linear-gradient(135deg, #ffffff 0%, var(--accent) 100%);  
-      -webkit-background-clip: text;  
-      -webkit-text-fill-color: transparent;  
-      margin-bottom: 12px;  
-    }  
-
-    .hero-subtitle {  
-      font-size: 1.05rem;  
-      color: #ccc;  
-      line-height: 1.6;  
-    }  
-
-    .container {  
-      max-width: 1000px;  
-      margin: 10px auto 40px;  
-      padding: 0 20px;  
-      width: 100%;  
-      flex: 1;  
-    }  
-
-    /* منطقة سحب وإسقاط الصور */
-    .drag-drop-zone {
-      border: 2px dashed rgba(212, 175, 55, 0.4);
-      border-radius: 14px;
-      padding: 30px;
-      text-align: center;
-      background: rgba(20, 20, 25, 0.4);
-      margin-bottom: 20px;
-      transition: 0.3s;
-      cursor: pointer;
-    }
-
-    .drag-drop-zone.dragover {
-      background: rgba(212, 175, 55, 0.15);
-      border-color: var(--accent);
-    }
-
-    .share-section {  
-      display: none;  
-      margin-bottom: 25px;  
-      background: var(--bg-card);  
-      backdrop-filter: blur(10px);  
-      padding: 15px 20px;  
-      border-radius: 12px;  
-      border: 1px solid rgba(212, 175, 55, 0.25);  
-      align-items: center;  
-      justify-content: space-between;  
-      gap: 15px;  
-      flex-wrap: wrap;
-    }  
-
-    .share-btn {  
-      background: transparent;  
-      border: 1px solid var(--accent);  
-      color: var(--accent);  
-      padding: 8px 16px;  
-      border-radius: 6px;  
-      font-weight: bold;  
-      cursor: pointer;  
-      display: flex;  
-      align-items: center;  
-      gap: 8px;  
-      transition: 0.2s;  
-    }  
-
-    .share-btn:hover {  
-      background: var(--accent);  
-      color: #000;  
-    }  
-
-    .share-btn.saved {  
-      background: var(--success);  
-      border-color: var(--success);  
-      color: #fff;  
-    }  
-
-    .gallery-grid {  
-      display: grid;  
-      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));  
-      gap: 20px;  
-    }  
-
-    .image-card {  
-      position: relative;  
-      border-radius: 14px;  
-      overflow: hidden;  
-      background-color: var(--bg-card);  
-      box-shadow: 0 10px 25px rgba(0,0,0,0.6);  
-      border: 1px solid rgba(255,255,255,0.08);  
-      backdrop-filter: blur(5px);  
-      cursor: pointer;
-    }  
-
-    .image-card img {  
-      width: 100%;  
-      height: 230px;  
-      object-fit: cover;  
-      display: block;  
-      transition: transform 0.4s ease;
-    }  
-
-    .image-card:hover img {
-      transform: scale(1.05);
-    }
-
-    .card-overlay {  
-      position: absolute;  
-      top: 0; left: 0; right: 0; bottom: 0;  
-      background: rgba(0, 0, 0, 0.65);  
-      backdrop-filter: blur(3px);  
-      display: flex;  
-      justify-content: center;  
-      align-items: center;  
-      gap: 12px;
-      opacity: 0;  
-      transition: 0.3s;  
-    }  
-
-    .image-card:hover .card-overlay {  
-      opacity: 1;  
-    }  
-
-    .overlay-btn {  
-      border: 1px solid;  
-      width: 42px;  
-      height: 42px;  
-      border-radius: 50%;  
-      cursor: pointer;  
-      font-size: 16px;  
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: 0.2s;
-    }  
-
-    .overlay-btn.btn-delete {
-      background: rgba(255, 77, 77, 0.25);  
-      border-color: var(--danger);  
-      color: var(--danger);  
-    }
-
-    .overlay-btn.btn-delete:hover {  
-      background: var(--danger);  
-      color: white;  
-    }  
-
-    .overlay-btn.btn-view {
-      background: rgba(212, 175, 55, 0.25);  
-      border-color: var(--accent);  
-      color: var(--accent);  
-    }
-
-    .overlay-btn.btn-view:hover {  
-      background: var(--accent);  
-      color: black;  
-    }  
-
-    .sidebar {  
-      position: fixed;  
-      top: 0; right: -320px;  
-      width: 300px; height: 100%;  
-      background-color: rgba(18, 18, 24, 0.95);  
-      backdrop-filter: blur(15px);  
-      box-shadow: -10px 0 30px rgba(0,0,0,0.8);  
-      transition: 0.3s ease;  
-      padding: 25px;  
-      z-index: 100;  
-      border-left: 1px solid rgba(212, 175, 55, 0.15);  
-      display: flex;  
-      flex-direction: column;  
-    }  
-
-    .sidebar.active { right: 0; }  
-
-    .sidebar-header {  
-      display: flex;  
-      justify-content: space-between;  
-      align-items: center;  
-      border-bottom: 1px solid #252525;  
-      padding-bottom: 15px;  
-      margin-bottom: 20px;  
-    }  
-
-    .project-list {  
-      flex: 1;  
-      overflow-y: auto;  
-    }  
-
-    .project-item {  
-      padding: 12px 15px;  
-      background: rgba(30, 30, 40, 0.6);  
-      border-radius: 8px;  
-      display: flex;  
-      justify-content: space-between;  
-      align-items: center;  
-      margin-bottom: 10px;  
-      border: 1px solid #2a2a35;  
-      cursor: pointer;  
-      transition: 0.2s;
-    }  
-
-    .project-item:hover {  
-      border-color: var(--accent);  
-      background: rgba(40, 40, 55, 0.8);
-    }  
-
-    .project-actions {
-      display: flex;
-      gap: 8px;
-    }
-
-    footer {  
-      background: rgba(10, 10, 12, 0.9);  
-      border-top: 1px solid rgba(255,255,255,0.05);  
-      padding: 15px 30px;  
-      text-align: center;  
-      font-size: 13px;  
-      color: #888;  
-    }  
-
-    footer a {  
-      color: var(--accent);  
-      text-decoration: none;  
-      margin: 0 8px;  
-      cursor: pointer;  
-    }  
-
-    footer a:hover {  
-      text-decoration: underline;  
-    }  
-
-    .modal {  
-      display: none;  
-      position: fixed;  
-      top: 0; left: 0; width: 100%; height: 100%;  
-      background: rgba(0, 0, 0, 0.85);  
-      backdrop-filter: blur(8px);  
-      justify-content: center;  
-      align-items: center;  
-      z-index: 200;  
-    }  
-
-    .modal-content {  
-      background: rgba(20, 20, 25, 0.95);  
-      padding: 30px;  
-      border-radius: 16px;  
-      text-align: right;  
-      max-width: 500px;  
-      width: 90%;  
-      max-height: 85vh;  
-      overflow-y: auto;  
-      border: 1px solid rgba(212, 175, 55, 0.3);  
-    }  
-
-    .modal-input {
-      width: 100%;
-      padding: 10px 14px;
-      margin-top: 15px;
-      background: #121216;
-      border: 1px solid rgba(212, 175, 55, 0.3);
-      border-radius: 8px;
-      color: var(--text-main);
-      font-size: 14px;
-      outline: none;
-    }
-
-    .modal-input:focus {
-      border-color: var(--accent);
-    }
-
-    .modal-actions {  
-      display: flex;  
-      gap: 12px;  
-      justify-content: center;  
-      margin-top: 25px;  
-    }  
-
-    .btn {  
-      padding: 10px 22px;  
-      border-radius: 8px;  
-      border: none;  
-      cursor: pointer;  
-      font-weight: bold;  
-      transition: 0.2s;
-    }  
-
-    .btn-accent { background: var(--accent); color: #000; }
-    .btn-accent:hover { background: #f3ce56; }
-    .btn-danger { background: var(--danger); color: white; }  
-    .btn-secondary { background: #2a2a35; color: white; }  
-
-    .toast-container {  
-      position: fixed;  
-      bottom: 25px;  
-      left: 50%;  
-      transform: translateX(-50%);  
-      z-index: 300;  
-    }  
-
-    .toast {  
-      background: rgba(20, 20, 25, 0.95);  
-      color: var(--text-main);  
-      border: 1px solid var(--accent);  
-      padding: 12px 24px;  
-      border-radius: 8px;  
-      box-shadow: 0 8px 20px rgba(0,0,0,0.7);  
-      display: flex;  
-      align-items: center;  
-      gap: 10px;  
-      font-size: 14px;  
-      backdrop-filter: blur(10px);  
-      animation: fadeInUp 0.3s ease;  
-    }  
-
-    .lightbox-img {
-      max-width: 100%;
-      max-height: 70vh;
-      object-fit: contain;
-      border-radius: 8px;
-      margin-top: 10px;
-    }
-
-    @keyframes fadeInUp {  
-      from { opacity: 0; transform: translateY(20px); }  
-      to { opacity: 1; transform: translateY(0); }  
-    }
-  </style>  
-</head>  
-<body>    
-  <div class="video-background-container">  
-    <video id="bgVideo" autoplay loop muted playsinline webkit-playsinline preload="auto" class="bg-video">  
-      <source src="https://cdn.pixabay.com/video/2019/04/23/23011-332483109_large.mp4" type="video/mp4">  
-    </video>  
-    <div class="video-overlay"></div>  
-  </div>    
-
-  <div class="site-content">  
-    <header>  
-      <div class="brand-title" onclick="window.location.href=window.location.pathname">Lumiqon</div>  
-      <div class="header-actions">  
-        <button class="add-btn" onclick="document.getElementById('fileInput').click()">  
-          <i class="fa-solid fa-plus"></i>  
-          إضافة صور  
-        </button>  
-
-        <input type="file" id="fileInput" hidden accept="image/png, image/jpeg, image/webp" multiple onchange="handleFileUpload(event)">  
-          
-        <button class="menu-btn" onclick="toggleSidebar()">  
-          <i class="fa-solid fa-bars"></i>  
-        </button>  
-      </div>  
-    </header>  
-
-    <div class="hero-section">  
-      <h1 class="hero-title">اعرض إبداعك بأسلوب راقٍ</h1>  
-      <p class="hero-subtitle">قم برفع أعمالك وصورك المميزة في Lumiqon، وأنشئ معرضاً خاصاً بك ليتمكن الجميع من رؤية إبداعك عبر رابط مباشر.</p>  
-    </div>  
-
-    <div class="container">  
-      <div class="drag-drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
-        <i class="fa-solid fa-cloud-arrow-up" style="font-size: 32px; color: var(--accent); margin-bottom: 10px;"></i>
-        <p style="font-size: 14px; color: #ccc;">اسحب وأسقط الصور هنا، أو اضغط للتصفح من جهازك</p>
-      </div>
-
-      <div class="share-section" id="shareSection">  
-        <span style="font-size: 14px; color: #aaa;"><i class="fa-solid fa-link" style="color: var(--accent); margin-left: 8px;"></i>رابط هذا المعرض جاهز للمشاركة</span>  
-        <div style="display:flex; gap:10px;">  
-          <button class="share-btn" id="saveBtn" onclick="openSaveModal()"><i class="fa-solid fa-floppy-disk"></i> حفظ المشروع</button>  
-          <button class="share-btn" onclick="copyProjectLink()"><i class="fa-solid fa-copy"></i> نسخ الرابط</button>  
-        </div>  
-      </div>  
-
-      <div class="gallery-grid" id="galleryGrid"></div>  
-    </div>  
-
-    <div class="sidebar" id="sidebar">  
-      <div class="sidebar-header">  
-        <h3>المشاريع المحفوظة</h3>  
-        <i class="fa-solid fa-xmark" style="cursor:pointer; font-size: 20px;" onclick="toggleSidebar()"></i>  
-      </div>  
-      <div class="project-list" id="projectList"></div>  
-    </div>  
-
-    <footer>  
-      <p>© جميع الحقوق محفوظة لموقع Lumiqon - <a onclick="openModal('termsModal')">شروط الاستخدام</a> | <a onclick="openModal('disclaimerModal')">إخلاء المسؤولية</a></p>  
+    <!-- تذييل الصفحة -->
+    <footer class="text-center text-xs text-slate-400 mt-8">
+        صُنع بحب وفن &bull; نظام حماية صارم ومعالجة محلية آمنة 100% داخل المتصفح.
     </footer>
-  </div>    
 
-  <!-- النوافذ المنبثقة -->    
-  <div class="modal" id="saveProjectModal">  
-    <div class="modal-content" style="text-align: center;">  
-      <i class="fa-solid fa-folder-plus" style="font-size: 40px; color: var(--accent); margin-bottom: 10px;"></i>  
-      <h3>حفظ المشروع</h3>  
-      <p style="color: #aaa; font-size: 13px; margin-top: 5px;">أدخل اسماً مميزاً لمشروعك لحفظه في القائمة الجانبية</p>  
-      <input type="text" id="projectNameInput" class="modal-input" placeholder="اسم المشروع...">  
-      <div class="modal-actions">  
-        <button class="btn btn-accent" onclick="confirmSaveProject()">حفظ</button>  
-        <button class="btn btn-secondary" onclick="closeModal('saveProjectModal')">إلغاء</button>  
-      </div>  
-    </div>  
-  </div>
+    <!-- جافاسكريبت للحماية والتشغيل -->
+    <script>
+        const qualitySlider = document.getElementById('imageQuality');
+        const qualityValSpan = document.getElementById('qualityVal');
+        const fileInput = document.getElementById('uploadImage');
+        const previewContainer = document.getElementById('previewContainer');
+        const statsDiv = document.getElementById('stats');
+        const originalSizeSpan = document.getElementById('originalSize');
+        const newSizeSpan = document.getElementById('newSize');
 
-  <div class="modal" id="lightboxModal">  
-    <div class="modal-content" style="text-align: center; max-width: 700px;">  
-      <div style="display: flex; justify-content: space-between; align-items: center;">
-        <span style="color: var(--accent); font-weight: bold;">معاينة الصورة</span>
-        <i class="fa-solid fa-xmark" style="cursor:pointer; font-size: 20px; color: #fff;" onclick="closeModal('lightboxModal')"></i>
-      </div>
-      <img id="lightboxImage" src="" class="lightbox-img" alt="معاينة الصورة">
-      <div class="modal-actions">  
-        <button class="btn btn-accent" onclick="copyImageDirectLink()"><i class="fa-solid fa-link"></i> نسخ رابط الصورة المباشر</button>
-        <button class="btn btn-secondary" onclick="closeModal('lightboxModal')">إغلاق</button>  
-      </div>  
-    </div>  
-  </div>
+        let originalFile = null;
 
-  <div class="modal" id="termsModal">  
-    <div class="modal-content">  
-      <div style="text-align: center; margin-bottom: 15px;">  
-        <i class="fa-solid fa-file-contract" style="font-size: 40px; color: var(--accent);"></i>  
-        <h3 style="margin-top: 10px;">شروط الاستخدام - Lumiqon</h3>  
-      </div>  
-      <div style="color: #bbb; font-size: 13px; line-height: 1.7; text-align: justify;">  
-        <p>مرحباً بك في موقع <strong>Lumiqon</strong>. باستخدامك للموقع أو لخدمة رفع الصور، فإنك توافق تماماً على الالتزام بالشروط والأحكام التالية...</p>  
-      </div>  
-      <div class="modal-actions">  
-        <button class="btn btn-secondary" onclick="closeModal('termsModal')">إلغاء</button>  
-      </div>  
-    </div>  
-  </div>    
+        // دالة إظهار التنبيه المخصص
+        function showAlert(title, message, type = 'warning') {
+            const modal = document.getElementById('customModal');
+            const content = document.getElementById('modalContent');
+            const titleEl = document.getElementById('modalTitle');
+            const msgEl = document.getElementById('modalMessage');
+            const iconEl = document.getElementById('modalIcon');
 
-  <div class="modal" id="disclaimerModal">  
-    <div class="modal-content" style="text-align: center;">  
-      <i class="fa-solid fa-shield-halved" style="font-size: 40px; color: var(--accent); margin-bottom: 15px;"></i>  
-      <h3 style="margin-bottom: 10px;">إخلاء المسؤولية</h3>  
-      <p style="color: #bbb; font-size: 13px; line-height: 1.6; text-align: justify;">  
-        إن موقع Lumiqon هو مجرد وسيط تقني لعرض واستضافة الصور.  
-      </p>  
-      <div class="modal-actions">  
-        <button class="btn btn-secondary" onclick="closeModal('disclaimerModal')">إغلاق</button>  
-      </div>  
-    </div>  
-  </div>    
+            titleEl.textContent = title;
+            msgEl.textContent = message;
 
-  <div class="modal" id="deleteModal">  
-    <div class="modal-content" style="text-align: center;">  
-      <i class="fa-solid fa-trash-can" style="font-size: 45px; color: var(--danger); margin-bottom: 15px;"></i>  
-      <h3>هل تريد حذف المشروع؟</h3>  
-      <div class="modal-actions">  
-        <button class="btn btn-danger" onclick="confirmDeleteProject()">نعم، احذف</button>  
-        <button class="btn btn-secondary" onclick="closeModal('deleteModal')">إلغاء</button>  
-      </div>  
-    </div>  
-  </div>    
+            if (type === 'success') {
+                iconEl.innerHTML = '✨';
+                iconEl.className = 'w-16 h-16 bg-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold';
+            } else if (type === 'danger') {
+                iconEl.innerHTML = '🛡️';
+                iconEl.className = 'w-16 h-16 bg-red-500/20 text-red-400 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold';
+            } else {
+                iconEl.innerHTML = '🎨';
+                iconEl.className = 'w-16 h-16 bg-pink-500/20 text-pink-400 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold';
+            }
 
-  <div class="toast-container" id="toastContainer"></div>    
-
-  <script>  
-    const IMGBB_API_KEY = "366d17997c2f2fc4221f967da17d0717";
-    const MAX_SIZE = 5 * 1024 * 1024;  
-    let currentImages = [];  
-    let projects = JSON.parse(localStorage.getItem('lumiqon_projects') || '[]');  
-    let projectToDeleteIndex = null;  
-    let isCurrentProjectSaved = false;  
-    let currentActiveImageIndex = null;
-
-    window.addEventListener('DOMContentLoaded', function() {  
-      const video = document.getElementById('bgVideo');  
-      if (video) {  
-        video.muted = true;  
-        video.play().catch(() => {});  
-      }  
-      setupDragAndDrop();
-      checkSharedProjectLink();
-    });  
-
-    window.onload = function() {  
-      renderProjectsList();  
-    };  
-
-    function setupDragAndDrop() {
-      const dropZone = document.getElementById('dropZone');
-      ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-        document.body.addEventListener(eventName, e => { e.preventDefault(); e.stopPropagation(); });
-      });
-      ['dragenter', 'dragover'].forEach(eventName => dropZone.addEventListener(eventName, () => dropZone.classList.add('dragover')));
-      ['dragleave', 'drop'].forEach(eventName => dropZone.addEventListener(eventName, () => dropZone.classList.remove('dragover')));
-      dropZone.addEventListener('drop', (e) => handleFiles(e.dataTransfer.files));
-    }
-
-    function showToast(message, icon = "fa-circle-check") {  
-      const container = document.getElementById('toastContainer');  
-      container.innerHTML = `<div class="toast"><i class="fa-solid ${icon}" style="color: var(--accent);"></i><span>${message}</span></div>`;  
-      setTimeout(() => { container.innerHTML = ''; }, 3000);  
-    }  
-
-    function toggleSidebar() { document.getElementById('sidebar').classList.toggle('active'); }  
-    function openModal(modalId) { document.getElementById(modalId).style.display = 'flex'; }  
-    function closeModal(modalId) { 
-      document.getElementById(modalId).style.display = 'none';  
-      if (modalId === 'lightboxModal') currentActiveImageIndex = null;
-    }  
-
-        function handleFileUpload(event) { handleFiles(event.target.files); }  
-
-    function renderGallery() {  
-      const grid = document.getElementById('galleryGrid');  
-      grid.innerHTML = '';  
-      currentImages.forEach((imgSrc, index) => {  
-        const card = document.createElement('div');  
-        card.className = 'image-card';  
-        card.innerHTML = `  
-          <img src="${imgSrc}" onclick="openLightbox('${imgSrc}', ${index})">  
-          <div class="card-overlay">  
-            <button class="overlay-btn btn-view" onclick="openLightbox('${imgSrc}', ${index})"><i class="fa-solid fa-expand"></i></button>  
-            <button class="overlay-btn btn-delete" onclick="removeImage(${index})"><i class="fa-solid fa-trash-can"></i></button>  
-          </div>  
-        `;  
-        grid.appendChild(card);  
-      });  
-      document.getElementById('shareSection').style.display = currentImages.length > 0 ? 'flex' : 'none';  
-    }  
-
-    // طبقة الحماية الأمنية (Magic Bytes) للتأكد من أن الملف صورة حقيقية
-    async function validateImageFileContent(file) {
-      return new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.onloadend = function(e) {
-          if (e.target.readyState !== FileReader.DONE) {
-            resolve(false);
-            return;
-          }
-          const arr = (new Uint8Array(e.target.result)).subarray(0, 4);
-          let header = "";
-          for (let i = 0; i < arr.length; i++) {
-            header += arr[i].toString(16);
-          }
-          // التحقق من البصمات الثنائية الشهيرة للصور (JPEG, PNG, WebP)
-          let isValid = false;
-          if (header.startsWith("ffd8")) isValid = true; // JPEG
-          else if (header.startsWith("89504e47")) isValid = true; // PNG
-          else if (header.startsWith("52494646")) isValid = true; // WEBP (RIFF)
-          
-          resolve(isValid);
-        };
-        reader.readAsArrayBuffer(file.slice(0, 12));
-      });
-    }
-
-    async function uploadImageToImgBB(file) {
-      const formData = new FormData();
-      formData.append('image', file);
-      const response = await fetch(`https://api.imgbb.com/1/upload?key=${encodeURIComponent(IMGBB_API_KEY)}`, {
-        method: 'POST',
-        body: formData
-      });
-      const result = await response.json();
-      if (!response.ok || !result.success) throw new Error('فشل رفع الصورة');
-      return result.data.url;
-    }
-
-    async function handleFiles(files) {
-      if (!files || files.length === 0) return;
-
-      for (const file of Array.from(files)) {
-        if (!file.type.match('image.*')) {
-          showToast("يرجى اختيار صور فقط.", "fa-triangle-exclamation");
-          continue;
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                content.classList.remove('scale-95', 'opacity-0');
+                content.classList.add('scale-100', 'opacity-100');
+            }, 10);
         }
 
-        // تفعيل نظام الحماية الأمنية (Magic Bytes)
-        const isRealImage = await validateImageFileContent(file);
-        if (!isRealImage) {
-          showToast(`الملف ${file.name} غير مطابق لبصمة الصور الحقيقية وتم رفضه!`, "fa-triangle-exclamation");
-          continue;
+        function closeModal() {
+            const modal = document.getElementById('customModal');
+            const content = document.getElementById('modalContent');
+            content.classList.remove('scale-100', 'opacity-100');
+            content.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 150);
         }
 
-        if (file.size > MAX_SIZE) {
-          showToast(`الصورة ${file.name} تتجاوز 5 ميجابايت.`, "fa-triangle-exclamation");
-          continue;
+        // تحديث نسبة الجودة
+        qualitySlider.addEventListener('input', (e) => {
+            qualityValSpan.textContent = Math.round(e.target.value * 100) + '%';
+        });
+
+        // نظام الحماية والتحقق الصارم عند رفع الملف
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            // 1. التحقق من MIME Type الأساسي
+            if (!file.type.startsWith('image/')) {
+                showAlert("حظر أمني 🛡️", "عذراً، هذا الملف غير مسموح به! الموقع مخصص لاستقبال الصور فقط.", "danger");
+                fileInput.value = ''; // تفريغ الحقل
+                resetPreview();
+                return;
+            }
+
+            // 2. فحص عميق للملف والتأكد من هويته البصرية
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const img = new Image();
+                
+                // إذا حاول شخص تمرير كود خبيث مخفي بصيغة وهمية، فلن تنجح الصورة في عملية الـ Load أبداً
+                img.onload = function() {
+                    originalFile = file;
+                    originalSizeSpan.textContent = (file.size / 1024).toFixed(1) + ' KB';
+                    previewContainer.innerHTML = `<img src="${event.target.result}" class="w-full h-full object-contain rounded-lg">`;
+                    statsDiv.classList.remove('hidden');
+                };
+
+                img.onerror = function() {
+                    showAlert("ملف غير صالح ⚠", "عذراً، الملف المرفوع تالف أو محاولة حقن كود غير مدعوم. تم رفض الملف.", "danger");
+                    fileInput.value = '';
+                    resetPreview();
+                };
+
+                img.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        });
+
+        function resetPreview() {
+            originalFile = null;
+            previewContainer.innerHTML = `
+                <svg class="w-12 h-12 text-slate-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                <p class="text-sm text-slate-500">لم يتم اختيار صورة آمنة بعد</p>
+            `;
+            statsDiv.classList.add('hidden');
         }
 
-        try {
-          showToast(`جاري رفع ${file.name}...`, "fa-circle-notch");
-          const imageUrl = await uploadImageToImgBB(file);
-          currentImages.push(imageUrl);
-          isCurrentProjectSaved = false;
-          resetSaveButton();
-          renderGallery();
-          showToast(`تم رفع ${file.name} بنجاح!`);
-        } catch (error) {
-          showToast(`تعذر رفع الصورة ${file.name}.`, "fa-triangle-exclamation");
+        function processImage() {
+            if (!originalFile) {
+                showAlert("تنبيه", "الرجاء اختيار صورة آمنة وصالحة أولاً!", "warning");
+                return;
+            }
+
+            const format = document.getElementById('outputFormat').value;
+            const quality = parseFloat(qualitySlider.value);
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0);
+
+                    // معالجة وتحويل الصورة بأمان تام داخل الـ Canvas
+                    const dataUrl = canvas.toDataURL(format, quality);
+
+                    // حساب الحجم الجديد
+                    const base64Length = dataUrl.length - (dataUrl.indexOf(',') + 1);
+                    const blobSize = (base64Length * 3) / 4;
+                    newSizeSpan.textContent = (blobSize / 1024).toFixed(1) + ' KB';
+
+                    // تحميل الصورة الآمنة الناتجة
+                    const link = document.createElement('a');
+                    link.href = dataUrl;
+                    const ext = format.split('/')[1];
+                    link.download = `art-piece-${Date.now()}.${ext}`;
+                    link.click();
+
+                    showAlert("تمت العملية بنجاح! 🎉", "تم فحص، تحويل وضغط تحفتك الفنية بأمان تام وتنزيلها لجهازك.", "success");
+                }
+                img.src = event.target.result;
+            }
+            reader.readAsDataURL(originalFile);
         }
-      }
-    }
-
-    function openLightbox(imgSrc, index) {
-      document.getElementById('lightboxImage').src = imgSrc;
-      currentActiveImageIndex = index;
-      openModal('lightboxModal');
-    }
-
-    function copyImageDirectLink() {
-      if (currentActiveImageIndex === null) return;
-      navigator.clipboard.writeText(currentImages[currentActiveImageIndex]).then(() => {
-        showToast("تم نسخ رابط الصورة المباشر بنجاح!");
-      });
-    }
-
-    function removeImage(index) {  
-      currentImages.splice(index, 1);  
-      isCurrentProjectSaved = false;  
-      resetSaveButton();  
-      renderGallery();  
-    }  
-
-    function resetSaveButton() {  
-      const btn = document.getElementById('saveBtn');  
-      btn.classList.remove('saved');  
-      btn.innerHTML = `<i class="fa-solid fa-floppy-disk"></i> حفظ المشروع`;  
-    }  
-
-    function openSaveModal() {
-      if (currentImages.length === 0) return;  
-      if (isCurrentProjectSaved) {  
-        showToast("المشروع محفوظ بالفعل!", "fa-circle-info");  
-        return;  
-      }  
-      document.getElementById('projectNameInput').value = "مشروع " + (projects.length + 1);
-      openModal('saveProjectModal');
-    }
-
-    function confirmSaveProject() {  
-      const nameInput = document.getElementById('projectNameInput').value.trim();
-      const projectName = nameInput || ("مشروع " + (projects.length + 1));
-      projects.push({ name: projectName, images: [...currentImages] });  
-      localStorage.setItem('lumiqon_projects', JSON.stringify(projects));  
-      renderProjectsList();  
-      isCurrentProjectSaved = true;  
-      const btn = document.getElementById('saveBtn');  
-      btn.classList.add('saved');  
-      btn.innerHTML = `<i class="fa-solid fa-check"></i> تم الحفظ`;  
-      closeModal('saveProjectModal');
-      showToast("تم حفظ المشروع بنجاح!");  
-    }  
-
-    function renderProjectsList() {  
-      const list = document.getElementById('projectList');  
-      if (projects.length === 0) {  
-        list.innerHTML = '<p style="color: #666; text-align: center; font-size: 14px; margin-top: 20px;">لا توجد مشاريع محفوظة</p>';  
-        return;  
-      }  
-      list.innerHTML = '';  
-      projects.forEach((proj, idx) => {  
-        const item = document.createElement('div');  
-        item.className = 'project-item';  
-        item.innerHTML = `  
-          <span onclick="loadProject(${idx})" style="flex:1;">${proj.name} (${proj.images.length} صور)</span>  
-          <div class="project-actions">
-            <i class="fa-solid fa-pen" style="color: var(--accent); cursor:pointer;" onclick="renameProject(event, ${idx})"></i>
-            <i class="fa-solid fa-trash" style="color: var(--danger); cursor:pointer;" onclick="askDeleteProject(event, ${idx})"></i>  
-          </div>
-        `;  
-        list.appendChild(item);  
-      });  
-    }  
-
-    function renameProject(event, idx) {
-      event.stopPropagation();
-      const newName = prompt("أدخل الاسم الجديد:", projects[idx].name);
-      if (newName && newName.trim() !== "") {
-        projects[idx].name = newName.trim();
-        localStorage.setItem('lumiqon_projects', JSON.stringify(projects));  
-        renderProjectsList();
-        showToast("تم تحديث اسم المشروع.");
-      }
-    }
-
-    function loadProject(idx) {  
-      currentImages = [...projects[idx].images];  
-      isCurrentProjectSaved = true;  
-      const btn = document.getElementById('saveBtn');  
-      btn.classList.add('saved');  
-      btn.innerHTML = `<i class="fa-solid fa-check"></i> تم الحفظ`;  
-      renderGallery();  
-      toggleSidebar();  
-    }  
-
-    function askDeleteProject(event, idx) {  
-      event.stopPropagation();  
-      projectToDeleteIndex = idx;  
-      openModal('deleteModal');  
-    }  
-
-    function confirmDeleteProject() {  
-      if (projectToDeleteIndex !== null) {  
-        projects.splice(projectToDeleteIndex, 1);  
-        localStorage.setItem('lumiqon_projects', JSON.stringify(projects));  
-        renderProjectsList();  
-        currentImages = [];  
-        renderGallery();  
-        closeModal('deleteModal');  
-        toggleSidebar();  
-        showToast("تم الحذف بنجاح.");  
-      }  
-    }  
-
-    // نظام نسخ رابط المعرض المجمع (يضم كل الصور) دون مشاكل وسوبابيس
-    function copyProjectLink() {
-      if (currentImages.length === 0) return;
-      const galleryData = encodeURIComponent(JSON.stringify(currentImages));
-      const shareableUrl = `${window.location.origin}${window.location.pathname}?galleryData=${galleryData}`;
-      
-      navigator.clipboard.writeText(shareableUrl).then(() => {
-        showToast("تم نسخ رابط المعرض الذي يضم جميع الصور بنجاح!");
-      }).catch(() => {
-        prompt("انسخ الرابط يدوياً:", shareableUrl);
-      });
-    }
-
-    // جلب المعرض تلقائياً إذا تم فتح الرابط من شخص آخر
-    function checkSharedProjectLink() {
-      const params = new URLSearchParams(window.location.search);
-      const galleryData = params.get('galleryData');
-      if (!galleryData) return;
-      try {
-        const decodedImages = JSON.parse(decodeURIComponent(galleryData));
-        if (Array.isArray(decodedImages) && decodedImages.length > 0) {
-          currentImages = decodedImages;
-          renderGallery();
-          showToast("تم تحميل المعرض المشترك بنجاح!");
-        }
-      } catch (err) {
-        showToast("رابط المعرض غير صالح.", "fa-triangle-exclamation");
-      }
-    }
-  </script>  
-</body>  
-</html>
+    </script>
+</body>
+  </html>
+  
