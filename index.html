@@ -945,104 +945,52 @@
       });  
     }  
 
-    function renameProject(event, idx) {
-      event.stopPropagation();
-      const newName = prompt("أدخل الاسم الجديد للمشروع:", projects[idx].name);
-      if (newName && newName.trim() !== "") {
-        projects[idx].name = newName.trim();
-        localStorage.setItem('lumiqon_projects', JSON.stringify(projects));  
-        renderProjectsList();
-        showToast("تم تحديث اسم المشروع.");
-      }
+    <!-- ضع هذا الكود مكان الكود القديم الخاص بالزر أو الحدث البرمجي لمعرض الصور -->
+<script>
+  // دالة لتوليد ومشاركة رابط المعرض الذي يضم جميع الصور
+  function copyGalleryLink() {
+    // جمع كل روابط الصور الموجودة في المعرض الحالي
+    const imageElements = document.querySelectorAll('.gallery-image, img[data-gallery-item], .photo-grid img'); // استبدل المحدات بما يناسب كودك الحالي إذا لزم الأمر
+    
+    // إذا لم تكن هناك صور، نبحث في مصفوفة الصور العامة إن وجدت
+    let imagesList = [];
+    if (typeof uploadedImages !== 'undefined' && Array.isArray(uploadedImages)) {
+      imagesList = uploadedImages;
+    } else {
+      imageElements.forEach(img => imagesList.push(img.src));
     }
 
-    function loadProject(idx) {  
-      currentImages = [...projects[idx].images];  
-      isCurrentProjectSaved = true;  
-      const btn = document.getElementById('saveBtn');  
-      btn.classList.add('saved');  
-      btn.innerHTML = `<i class="fa-solid fa-check"></i> تم الحفظ`;  
-      renderGallery();  
-      toggleSidebar();  
-    }  
-
-    function askDeleteProject(event, idx) {  
-      event.stopPropagation();  
-      projectToDeleteIndex = idx;  
-      openModal('deleteModal');  
-    }  
-
-    function confirmDeleteProject() {  
-      if (projectToDeleteIndex !== null) {  
-        projects.splice(projectToDeleteIndex, 1);  
-        localStorage.setItem('lumiqon_projects', JSON.stringify(projects));  
-        renderProjectsList();  
-        currentImages = [];  
-        renderGallery();  
-        closeModal('deleteModal');  
-        toggleSidebar();  
-        showToast("تم حذف المشروع بنجاح بالكامل.");  
-      }  
-    }  
-
-    async function copyProjectLink() {
-      if (currentImages.length === 0) return;
-
-      try {
-        showToast("جاري إنشاء رابط المشاركة...", "fa-circle-notch");
-
-        const galleryId = crypto.randomUUID();
-
-        const { error } = await supabaseClient
-          .from('galleries')
-          .insert({
-            id: galleryId,
-            images: currentImages
-          });
-
-        if (error) throw error;
-
-        const shareableUrl = `${window.location.origin}${window.location.pathname}?gallery=${galleryId}`;
-
-        await navigator.clipboard.writeText(shareableUrl);
-
-        showToast("تم إنشاء رابط المعرض ونسخه بنجاح!");
-      } catch (error) {
-        console.error("خطأ في إنشاء رابط المشاركة:", error);
-        showToast("تعذر إنشاء رابط المشاركة.", "fa-triangle-exclamation");
-      }
+    if (imagesList.length === 0) {
+      alert('الرجاء إضافة صور إلى المعرض أولاً ليتم تضمينها في الرابط!');
+      return;
     }
 
-    async function checkSharedProjectLink() {
-      const params = new URLSearchParams(window.location.search);
-      const galleryId = params.get('gallery');
+    // حفظ الصور في التخزين المحلي مؤقتاً لتوليد رابط مشاركة مجمع
+    const galleryId = 'gallery_' + Date.now();
+    localStorage.setItem(galleryId, JSON.stringify(imagesList));
 
-      if (!galleryId) return;
+    // إنشاء رابط يوجه لنفس الصفحة مع معرف المعرض المجمع
+    const shareableLink = window.location.origin + window.location.pathname + '?gallery=' + galleryId;
 
-      try {
-        const { data, error } = await supabaseClient
-          .from('galleries')
-          .select('images')
-          .eq('id', galleryId)
-          .maybeSingle();
+    // نسخ الرابط إلى الحافظة
+    navigator.clipboard.writeText(shareableLink).then(() => {
+      alert('تم بنجاح نسخ رابط المعرض الذي يضم (' + imagesList.length + ') صورة!');
+    }).catch(err => {
+      console.error('فشل النسخ:', err);
+      prompt('نسخ الرابط يدوياً:', shareableLink);
+    });
+  }
 
-        if (error) throw error;
-
-        if (!data) {
-          showToast("المعرض غير موجود.", "fa-triangle-exclamation");
-          return;
-        }
-
-        if (Array.isArray(data.images)) {
-          currentImages = data.images;
-          renderGallery();
-          showToast("تم تحميل المعرض المشارك بنجاح!");
-        }
-      } catch (error) {
-        console.error("خطأ في تحميل المعرض:", error);
-        showToast("تعذر تحميل المعرض.", "fa-triangle-exclamation");
-      }
+  // ربط الدالة بالزر العام عند تحميل الصفحة
+  document.addEventListener('DOMContentLoaded', () => {
+    const copyLinkBtn = document.querySelector('#copy-link-btn, .copy-project-link'); // ضع معرف أو كلاس الزر الخاص بك هنا
+    if (copyLinkBtn) {
+      copyLinkBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        copyGalleryLink();
+      });
     }
+  });
   </script>  
 </body>  
 </html>
